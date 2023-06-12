@@ -58,89 +58,123 @@ class AboutControlStatements < Neo::Koan
     result = :default_value
     result = :true_value if true
 
-    assert_equal __, result
+    assert_equal :true_value, result
   end
 
   def test_unless_statement
     result = :default_value
+
     unless false # same as saying 'if !false', which evaluates as 'if true'
       result = :false_value
     end
-    assert_equal __, result
+    assert_equal :false_value, result
   end
 
   def test_unless_statement_evaluate_true
     result = :default_value
+
     unless true    # same as saying 'if !true', which evaluates as 'if false'
       result = :true_value
     end
-    assert_equal __, result
+    assert_equal :default_value, result
   end
 
   def test_unless_statement_modifier
     result = :default_value
     result = :false_value unless false
 
-    assert_equal __, result
+    assert_equal :false_value, result
   end
 
   def test_while_statement
     i = 1
     result = 1
+
     while i <= 10
-      result = result * i
+      # result = result * i
+      result *= i
       i += 1
     end
-    assert_equal __, result
+
+    assert_equal 3_628_800, result
   end
 
   def test_break_statement
     i = 1
     result = 1
-    while true
+
+    # while true
+    #   break unless i <= 10
+    #   result = result * i
+    #   i += 1
+    # end
+
+    # rubop recomend this, when you need to use infinite loop like while true
+    loop do
       break unless i <= 10
-      result = result * i
+
+      result *= i
       i += 1
     end
-    assert_equal __, result
+
+    assert_equal 3_628_800, result
   end
 
   def test_break_statement_returns_values
     i = 1
+
     result = while i <= 10
-      break i if i % 2 == 0
+      # break i if i % 2 == 0
+      break i if (i % 2).zero?
+
       i += 1
     end
 
-    assert_equal __, result
+    assert_equal 2, result
   end
 
   def test_next_statement
     i = 0
     result = []
+
     while i < 10
       i += 1
-      next if (i % 2) == 0
+      # next if (i % 2) == 0
+      next if (i % 2).zero?
+
       result << i
     end
-    assert_equal __, result
+
+    assert_equal [1, 3, 5, 7, 9], result
   end
 
   def test_for_statement
-    array = ["fish", "and", "chips"]
+    array = %w[fish and chips]
     result = []
+
     for item in array
       result << item.upcase
     end
-    assert_equal [__, __, __], result
+
+    # prefer each instead of for
+    # array.each do |item|
+    #   item.upcase
+    # end
+
+    # use this instead of the last code
+    # array.each(&:upcase)
+
+    assert_equal %w[FISH AND CHIPS], result
   end
 
   def test_times_statement
     sum = 0
-    10.times do
+
+    10.times do # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
       sum += 1
     end
-    assert_equal __, sum
+
+    assert_equal 10, sum
   end
 end
-# rubocop: disable Metric/ClassLength
+# rubocop: enable Metric/ClassLength
