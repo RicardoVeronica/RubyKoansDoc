@@ -14,6 +14,13 @@
 #   about_triangle_project_2.rb
 #
 def triangle(a, b, c)
+  raise TriangleError, 'Error: sides should be greater than zero' if a.zero? && b.zero? && c.zero?
+
+  raise TriangleError, 'Error: don\'t use negative numbers' if a.negative? || b.negative? || c.negative?
+
+  raise TriangleError, 'The sum of any two sides should be greater than the third side' if
+  a + b <= c || a + c <= b || b + c <= a
+
   # if a == b && b == c
   #   :equilateral
   # elsif a == b || a == c || b == c
