@@ -1,20 +1,20 @@
-require File.expand_path(File.dirname(__FILE__) + '/neo')
+# require File.expand_path(File.dirname(__FILE__) + '/neo')
+require File.expand_path("#{File.dirname(__FILE__)}/neo")
 
 class AboutIteration < Neo::Koan
-
   # -- An Aside ------------------------------------------------------
   # Ruby 1.8 stores names as strings. Ruby 1.9 and later stores names
   # as symbols. So we use a version dependent method "as_name" to
   # convert to the right format in the koans. We will use "as_name"
   # whenever comparing to lists of methods.
 
-  in_ruby_version("1.8") do
+  in_ruby_version('1.8') do
     def as_name(name)
       name.to_s
     end
   end
 
-  in_ruby_version("1.9", "2", "3") do
+  in_ruby_version('1.9', '2', '3') do
     def as_name(name)
       name.to_sym
     end
@@ -24,86 +24,125 @@ class AboutIteration < Neo::Koan
   # -------------------------------------------------------------------
 
   def test_each_is_a_method_on_arrays
-    assert_equal __, [].methods.include?(as_name(:each))
+    assert_equal true, [].methods.include?(as_name(:each))
   end
 
   def test_iterating_with_each
     array = [1, 2, 3]
     sum = 0
+
     array.each do |item|
       sum += item
     end
-    assert_equal __, sum
+
+    assert_equal 6, sum
   end
 
   def test_each_can_use_curly_brace_blocks_too
     array = [1, 2, 3]
     sum = 0
+
     array.each { |item| sum += item }
-    assert_equal __, sum
+
+    assert_equal 6, sum
   end
 
   def test_break_works_with_each_style_iterations
     array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     sum = 0
+
     array.each do |item|
-      break if item > 3
+      break if item > 3 # guard
+
       sum += item
     end
-    assert_equal __, sum
+
+    assert_equal 6, sum
   end
 
   def test_collect_transforms_elements_of_an_array
     array = [1, 2, 3]
+
     new_array = array.collect { |item| item + 10 }
-    assert_equal __, new_array
+
+    assert_equal [11, 12, 13], new_array
 
     # NOTE: 'map' is another name for the 'collect' operation
     another_array = array.map { |item| item + 10 }
-    assert_equal __, another_array
+
+    assert_equal [11, 12, 13], another_array
   end
 
   def test_select_selects_certain_items_from_an_array
     array = [1, 2, 3, 4, 5, 6]
 
-    even_numbers = array.select { |item| (item % 2) == 0 }
-    assert_equal __, even_numbers
+    even_numbers = array.select { |item| (item % 2).zero? }
+
+    assert_equal [2, 4, 6], even_numbers
 
     # NOTE: 'find_all' is another name for the 'select' operation
-    more_even_numbers = array.find_all { |item| (item % 2) == 0 }
-    assert_equal __, more_even_numbers
+    more_even_numbers = array.find_all { |item| (item % 2).zero? }
+
+    assert_equal [2, 4, 6], more_even_numbers
   end
 
   def test_find_locates_the_first_element_matching_a_criteria
-    array = ["Jim", "Bill", "Clarence", "Doug", "Eli"]
+    array = %w[Jim Bill Clarence Doug Eli]
 
-    assert_equal __, array.find { |item| item.size > 4 }
+    find_method = array.find do |item|
+      item.size > 4
+    end
+
+    assert_equal 'Clarence', find_method
+    # assert_equal 'Clarence', array.find { |item| item.size > 4 }
   end
 
   def test_inject_will_blow_your_mind
-    result = [2, 3, 4].inject(0) { |sum, item| sum + item }
-    assert_equal __, result
+    # result = [2, 3, 4].inject(0) { |sum, item| sum + item }
+    result = [2, 3, 4]
+
+    result.inject(0) do |acc, item|
+      acc + item
+    end
+
+    assert_equal [2, 3, 4], result
 
     result2 = [2, 3, 4].inject(1) { |product, item| product * item }
-    assert_equal __, result2
+
+    # result2 = [2, 3, 4]
+
+    # result2.inject(1) do |product, item|
+    #   # acc = 1, acc = 2, acc = 6, acc = 24
+    #   # 2*1 = 2*3 = 6*4 = 24
+    #   product * item
+    # end
+
+    assert_equal 24, result2
 
     # Extra Credit:
     # Describe in your own words what inject does.
+    # NOTE: Reduce method in other languages
+    # Return a unique value base in math operations apply to each item
   end
 
   def test_all_iteration_methods_work_on_any_collection_not_just_arrays
-    # Ranges act like a collection
+    # Ranges act like a collection, Enum
     result = (1..3).map { |item| item + 10 }
-    assert_equal __, result
+    # result = (1..3)
+
+    # reslut.map do |item|
+    #   item + 10
+    # end
+
+    assert_equal [11, 12, 13], result
 
     # Files act like a collection of lines
-    File.open("example_file.txt") do |file|
+    File.open('example_file.txt') do |file|
       upcase_lines = file.map { |line| line.strip.upcase }
-      assert_equal __, upcase_lines
+      assert_equal %w[THIS IS A TEST], upcase_lines
     end
 
-    # NOTE: You can create your own collections that work with each,
-    # map, select, etc.
+    # NOTE: You can create your own collections that work with each, map, select, etc.
   end
 
   # Bonus Question:  In the previous koan, we saw the construct:
@@ -117,6 +156,15 @@ class AboutIteration < Neo::Koan
   #   file = File.open(filename)
   #   # code to read 'file'
   #
+  #   File.open = open the file and yields the file object 'file' to the block
+  #   inside the block we can perform operations on the file, such as reading its content.
+  #
+  #   If we assign the result of File.open to a variable we need to manually ensure
+  #   that the file is closed when we are finished using it with file.close.
+  #
+  #   ANSWER: the reason to using the block of File.open is to ensure that
+  #   the file is properly closed after we finish using it.
+  #   The block take care of closing the file automatically.
+  #
   # When you get to the "AboutSandwichCode" koan, recheck your answer.
-
 end
