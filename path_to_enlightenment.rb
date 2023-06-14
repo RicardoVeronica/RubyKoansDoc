@@ -17,13 +17,13 @@ in_ruby_version('2', '3') do
 end
 require 'about_constants' # ok x
 require 'about_regular_expressions' # ok x
-require 'about_control_statements'
-require 'about_triangle_project'
-require 'about_exceptions'
-require 'about_triangle_project_2'
-require 'about_iteration'
-require 'about_blocks'
-require 'about_sandwich_code'
+require 'about_control_statements' # ok x
+require 'about_triangle_project' # ok x
+require 'about_exceptions' # ok x
+require 'about_triangle_project_2' # ok x
+require 'about_iteration' # ok x
+require 'about_blocks' # ok x
+require 'about_sandwich_code' # ok x
 require 'about_scoring_project'
 require 'about_classes'
 require 'about_open_classes'

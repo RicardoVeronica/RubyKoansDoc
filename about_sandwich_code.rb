@@ -1,35 +1,51 @@
-require File.expand_path(File.dirname(__FILE__) + '/neo')
+# require File.expand_path(File.dirname(__FILE__) + '/neo')
+require File.expand_path("#{File.dirname(__FILE__)}/neo")
 
 class AboutSandwichCode < Neo::Koan
-
   def count_lines(file_name)
-    file = open(file_name)
+    # file = open(file_name)
+    file = File.open(file_name)
     count = 0
-    while file.gets
-      count += 1
-    end
+
+    # while file.gets
+    #   count += 1 while file.gets
+    # end
+
+    # use this instead of while file.gets block
+    count += 1 while file.gets
+
     count
   ensure
-    file.close if file
+    # NOTE: offense = Style/SafeNavigation use safe navigation operator (&), return nil if not exist
+    # instead of explicit checking if an object exist before calling a method on it, throw NoMethodError if not exist
+
+    # file.close if file
+    file&.close
   end
 
   def test_counting_lines
-    assert_equal __, count_lines("example_file.txt")
+    assert_equal 4, count_lines('example_file.txt')
   end
 
   # ------------------------------------------------------------------
 
   def find_line(file_name)
-    file = open(file_name)
-    while line = file.gets
-      return line if line.match(/e/)
-    end
+    file = File.open(file_name)
+
+    # while line = file.gets
+    #   return line if line.match(/e/)
+    # end
+
+    line = file.gets
+    line.match(/e/)
   ensure
-    file.close if file
+    # file.close if file
+    file&.close
   end
 
   def test_finding_lines
-    assert_equal __, find_line("example_file.txt")
+    # no single line match with 'e'
+    assert_equal nil, find_line('example_file.txt')
   end
 
   # ------------------------------------------------------------------
@@ -66,41 +82,59 @@ class AboutSandwichCode < Neo::Koan
   def count_lines2(file_name)
     file_sandwich(file_name) do |file|
       count = 0
-      while file.gets
-        count += 1
-      end
+
+      # while file.gets
+      #   count += 1
+      # end
+      count += 1 while file.gets
+
       count
     end
   end
 
   def test_counting_lines2
-    assert_equal __, count_lines2("example_file.txt")
+    assert_equal 4, count_lines2('example_file.txt')
   end
 
   # ------------------------------------------------------------------
 
   def find_line2(file_name)
     # Rewrite find_line using the file_sandwich library function.
+    # answer from https://stackoverflow.com/questions/21345064/ruby-koan-sandwich-line-count
+    # file_sandwich(file_name) do |file|
+    #   while file.gets
+    #     if file.gets.match(/e/)
+    #       return file.gets
+    #     end
+    #   end
+    # end
+    file_sandwich(file_name) do |file|
+      # rubocop: disable Lint/UnreachableLoop
+      return file.gets.match(/e/) while file.gets
+      # rubocop: enable Lint/UnreachableLoop
+    end
   end
 
   def test_finding_lines2
-    assert_equal __, find_line2("example_file.txt")
+    assert_equal nil, find_line2('example_file.txt')
   end
 
   # ------------------------------------------------------------------
 
   def count_lines3(file_name)
-    open(file_name) do |file|
+    File.open(file_name) do |file|
       count = 0
-      while file.gets
-        count += 1
-      end
+
+      # while file.gets
+      #   count += 1
+      # end
+      count += 1 while file.gets
+
       count
     end
   end
 
   def test_open_handles_the_file_sandwich_when_given_a_block
-    assert_equal __, count_lines3("example_file.txt")
+    assert_equal 4, count_lines3('example_file.txt')
   end
-
 end
