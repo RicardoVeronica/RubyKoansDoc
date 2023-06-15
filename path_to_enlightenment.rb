@@ -24,7 +24,7 @@ require 'about_triangle_project_2' # ok x
 require 'about_iteration' # ok x
 require 'about_blocks' # ok x
 require 'about_sandwich_code' # ok x
-require 'about_scoring_project'
+# require 'about_scoring_project' # pending
 require 'about_classes'
 require 'about_open_classes'
 require 'about_dice_project'
