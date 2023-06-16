@@ -25,9 +25,9 @@ require 'about_iteration' # ok x
 require 'about_blocks' # ok x
 require 'about_sandwich_code' # ok x
 # require 'about_scoring_project' # pending
-require 'about_classes'
-require 'about_open_classes'
-require 'about_dice_project'
+require 'about_classes' # ok x
+require 'about_open_classes' # ok x
+# require 'about_dice_project' # pending
 require 'about_inheritance'
 require 'about_modules'
 require 'about_scope'
